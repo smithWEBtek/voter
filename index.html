@@ -12,8 +12,8 @@
 	<link rel="stylesheet" href="map.css">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-	<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
@@ -22,7 +22,7 @@
 		<div class='columns'>
 			<div class='column subtitle'>
 				<h1 class='title'>Vote Preference App</h1>
-				<button id='load-all-voters'>Load All Voters</button>
+				<button id='load-markers'>Load Campaign Manager Markers</button>
 			</div>
 		</div>
 
@@ -33,39 +33,6 @@
 					<div class='column'>
 						<fieldset class='subtitle'>
 							<form id='voter-preference-form' class='form-margin'>
-								<fieldset>
-									<legend>optional</legend>
-									<input type="text" id="first_name" placeholder="first name (optional)"><br>
-									<input type="text" id="last_name" placeholder="last name (optional)"><br>
-									<input type="text" id="email" placeholder="email (optional)"><br>
-									<input type="text" id="phone" placeholder="phone (optional)"><br>
-									<input type="text" id="age" placeholder="age (optional)"><br>
-
-									<select id="gender" placeholder="registered (optional)">
-										<option class="dropdown-item" value="">Gender?</option>
-										<option class="dropdown-item" value="Female">Female</option>
-										<option class="dropdown-item" value="Male">Male</option>
-										<option class="dropdown-item" value="Non-binary">Non-binary</option>
-										<option class="dropdown-item" value="Prefer not to say">Prefer not to say</option>
-									</select>
-
-									<select id="party">
-										<option class="dropdown-item" value="">Political Party?</option>
-										<option class="dropdown-item" value="Democrat">Democrat</option>
-										<option class="dropdown-item" value="Republican">Republican</option>
-										<option class="dropdown-item" value="Independent">Independent</option>
-										<option class="dropdown-item" value="Prefer not to say">Prefer not to say</option>
-										<option class="dropdown-item" value="Prefer to self-describe">Prefer to self-describe</option>
-									</select>
-
-									<select id="registered">
-										<option class="dropdown-item" value="">Are you a registered voter?</option>
-										<option class="dropdown-item" value="true">YES</option>
-										<option class="dropdown-item" value="false">NO</option>
-									</select>
-
-								</fieldset>
-								<br>
 								<fieldset>
 									<legend>required</legend>
 									<input type="text" id="street_number" placeholder="street number"><br>
