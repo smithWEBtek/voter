@@ -3,6 +3,7 @@ $(function () {
 	loadTestVoters()
 	newVoterForm()
 	loadCompaignManagerView()
+	mapClickStreetAddress()
 });
 
 let testVoters = [
@@ -39,7 +40,7 @@ L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function loadCompaignManagerView() {
 	$('#load-campaign-manager-view').on('click', function (event) {
 		event.preventDefault()
-		map.setView([42.358056, -71.063611], 4);
+		map.setView([42.358056, -71.063611], 5);
 		loadAllVoters()
 	})
 }
@@ -56,15 +57,16 @@ function loadAllVoters() {
 
 function loadMarkers(markers) {
 	markers.forEach((marker) => {
-		geocoder.geocode({ searchText: marker.address_string }, onResult, function (error) {
-			console.log("error with geocode request: ", error);
-		})
-
-		function onResult(data) {
-			marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
-			new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
-				icon: icons[marker.vote_preference]
-			}).addTo(map)
+		if (marker) {
+			geocoder.geocode({ searchText: marker.address_string }, onResult, function (error) {
+				console.log("error with geocode request: ", error);
+			})
+			function onResult(data) {
+				marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
+				new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
+					icon: icons[marker.vote_preference]
+				}).addTo(map)
+			}
 		}
 	})
 }
@@ -111,6 +113,56 @@ function newVoterForm() {
 	})
 }
 
+// voter clicks map, LatLng is converted to street address for validation by user
+function mapClickStreetAddress() {
+	let geocode;
+	map.addEventListener('click', function (event) {
+		geocode = [event.latlng.lat, event.latlng.lng].toString()
+		let prox = `${event.latlng.lat.toString()},`
+		prox += `${event.latlng.lng.toString()}, 150`
+
+		let reverseGeocodingParameters = {
+			// prox: '52.5309,13.3847,150',
+			prox: prox,
+			mode: 'retrieveAddresses',
+			maxresults: 1
+		};
+
+		geocoder.reverseGeocode(reverseGeocodingParameters, onSuccess, function (error) {
+			console.log('mapClickStreetAddress: error: ', error);
+		});
+	})
+	function onSuccess(result) {
+		let address = result.Response.View[0].Result[0].Location.Address
+		console.log('the address_string: ', address);
+
+		let obj = {
+			voter: {
+				address_string: address.Label,
+				street_number: address.HouseNumber,
+				street_name: address.Street,
+				city: address.City,
+				state: address.State,
+				postal_code: address.PostalCode,
+				geocode: geocode
+			}
+		}
+
+		$.ajax({
+			url: baseURL + 'voters',
+			method: 'post',
+			data: obj
+		}).done(function (data) {
+			let voter = new Voter(data)
+			let voterData = voter.voterHTML()
+			showVoterData(voterData)
+			new L.marker(voter.geocode.split(',').map(c => parseFloat(c)), {
+				icon: icons[voter.vote_preference]
+			}).addTo(map)
+		})
+	}
+}
+
 function showVoterData(data) {
 	$('#voter-data').html(data)
 }
@@ -123,11 +175,9 @@ class Voter {
 			this.city = obj.city,
 			this.state = obj.state,
 			this.postal_code = obj.postal_code,
-			this.lat = obj.lat,
-			this.lng = obj.lng,
 			this.geocode = obj.geocode,
 			this.address_string = obj.address_string,
-			this.vote_preference = obj.vote_preference
+			this.vote_preference = obj.vote_preference.toLowerCase()
 	}
 }
 
