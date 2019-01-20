@@ -5,8 +5,6 @@ $(function () {
 	loadCompaignManagerView()
 });
 
-let geocode = 'zxcv'
-
 let testVoters = [
 	[42.346268, -71.095764],
 	[42.380098, -71.116629],
@@ -20,8 +18,8 @@ function loadTestVoters() {
 }
 
 // baseURL can be toggled local Rails server or Heroku
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
-// const baseURL = 'http://127.0.0.1:3000/api/'
+// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+const baseURL = 'http://127.0.0.1:3000/api/'
 
 // API service to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -34,10 +32,9 @@ let geocoder = platform.getGeocodingService();
 
 // instance of Leaflet map, centered on Boston
 let map = L.map('map').setView([42.358056, -71.063611], 12);
-L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
-
 
 function loadCompaignManagerView() {
 	$('#load-campaign-manager-view').on('click', function (event) {
@@ -47,39 +44,30 @@ function loadCompaignManagerView() {
 	})
 }
 
-
 function loadAllVoters() {
 	$.ajax({
-		// url: baseURL + 'markers',
 		url: baseURL + 'voters',
 		method: 'get',
 		dataType: 'json'
 	}).done(function (response) {
 		loadMarkers(response)
-		console.log('response to loadAllVoters: ', response);
 	})
 }
 
 function loadMarkers(markers) {
-	// debugger
-	markers.forEach((marker, index) => {
+	markers.forEach((marker) => {
 		geocoder.geocode({ searchText: marker.address_string }, onResult, function (error) {
 			console.log("error with geocode request: ", error);
 		})
 
 		function onResult(data) {
-			geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
-			console.log("the geocode: ", geocode);
-
-			marker.geocode = geocode;
-
+			marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
 			new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
 				icon: icons[marker.vote_preference]
 			}).addTo(map)
 		}
 	})
 }
-
 
 // voter fills out address form, LatLng are derived by API, saved to database and rendered on map.
 function newVoterForm() {
@@ -88,7 +76,7 @@ function newVoterForm() {
 
 		let obj = {
 			voter: {
-				geocode: 'asdf',
+				geocode: '',
 				street_number: $('#street_number').val(),
 				street_name: $('#street_name').val(),
 				city: $('#city').val(),
@@ -104,10 +92,7 @@ function newVoterForm() {
 		})
 
 		function onResult(data) {
-			geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
-			console.log("the geocode: ", geocode);
-
-			obj.voter.geocode = geocode;
+			obj.voter.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
 
 			$.ajax({
 				method: 'post',
@@ -148,22 +133,22 @@ class Voter {
 
 Voter.prototype.voterHTML = function () {
 	return (`
-						< div data_id = ${ this.id} >
-					<p>${this.street_number ? this.street_number : ""} ${this.street_name ? this.street_name : ""}</p>
-					<p>${this.city ? this.city : ""}, ${this.state ? this.state : ""}  ${this.postal_code ? this.postal_code : ""}</p>
-					<p>${this.geocode ? this.geocode : ""}</p>
-					<p>${this.vote_preference ? this.vote_preference : ""}</p>
-		</div >
-					`)
+		<div>
+			<p>${this.street_number ? this.street_number : ""} ${this.street_name ? this.street_name : ""}</p>
+			<p>${this.city ? this.city : ""}, ${this.state ? this.state : ""}  ${this.postal_code ? this.postal_code : ""}</p>
+			<p>${this.geocode ? this.geocode : ""}</p>
+			<p>${this.vote_preference ? this.vote_preference : ""}</p>
+		</div>
+	`)
 }
 
 function infoDiv() {
 	let infoDiv = (`
-					< div id = 'info' >
-					<h1 id='name' class='subtitle'>title</h1>
-					<h1 id='LatLng' class='subtitle'>LatLng</h1>
-					<h1 id='link_anchor' class='subtitle'><a href='' target='_blank'>link</a></h1>
+		<div id='info'>
+			<h1 id='name' class='subtitle'>title</h1>
+			<h1 id='LatLng' class='subtitle'>LatLng</h1>
+			<h1 id='link_anchor' class='subtitle'><a href='' target='_blank'>link</a></h1>
 		</div >
-					`)
+	`)
 	document.getElementById('voter-data').innerHTML = infoDiv;
 }
