@@ -20,8 +20,8 @@ function loadTestVoters() {
 }
 
 // baseURL can be toggled local Rails server or Heroku
-// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
-const baseURL = 'http://127.0.0.1:3000/api/'
+const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+// const baseURL = 'http://127.0.0.1:3000/api/'
 
 // API service to geocode street address and vice versa
 let platform = new H.service.Platform({
