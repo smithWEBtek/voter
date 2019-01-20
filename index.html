@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Voter Preference App</title>
+	<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="http://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src='lib/leaflet/leaflet.js'></script>
+	<link rel="stylesheet" href="/lib/leaflet/leaflet.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="map.css">
+
+</head>
+
+<body>
+	<div class='section'>
+		<div class='columns'>
+			<div class='column subtitle'>
+				<h1 class='title'>Vote Preference App</h1>
+				<button id='load-all-voters'>Load All Voters</button>
+			</div>
+		</div>
+
+		<div class='columns'>
+			<div class='column left-side-nav' id='left-nav'>
+				<div class='columns'>
+
+					<div class='column'>
+						<fieldset class='subtitle'>
+							<form id='voter-preference-form' class='form-margin'>
+								<fieldset>
+									<legend>optional</legend>
+									<input type="text" id="first_name" placeholder="first name (optional)"><br>
+									<input type="text" id="last_name" placeholder="last name (optional)"><br>
+									<input type="text" id="email" placeholder="email (optional)"><br>
+									<input type="text" id="phone" placeholder="phone (optional)"><br>
+									<input type="text" id="age" placeholder="age (optional)"><br>
+
+									<select id="gender" placeholder="registered (optional)">
+										<option class="dropdown-item" value="">Gender?</option>
+										<option class="dropdown-item" value="Female">Female</option>
+										<option class="dropdown-item" value="Male">Male</option>
+										<option class="dropdown-item" value="Non-binary">Non-binary</option>
+										<option class="dropdown-item" value="Prefer not to say">Prefer not to say</option>
+									</select>
+
+									<select id="party">
+										<option class="dropdown-item" value="">Political Party?</option>
+										<option class="dropdown-item" value="Democrat">Democrat</option>
+										<option class="dropdown-item" value="Republican">Republican</option>
+										<option class="dropdown-item" value="Independent">Independent</option>
+										<option class="dropdown-item" value="Prefer not to say">Prefer not to say</option>
+										<option class="dropdown-item" value="Prefer to self-describe">Prefer to self-describe</option>
+									</select>
+
+									<select id="registered">
+										<option class="dropdown-item" value="">Are you a registered voter?</option>
+										<option class="dropdown-item" value="true">YES</option>
+										<option class="dropdown-item" value="false">NO</option>
+									</select>
+
+								</fieldset>
+								<br>
+								<fieldset>
+									<legend>required</legend>
+									<input type="text" id="street_number" placeholder="street number"><br>
+									<input type="text" id="street_name" placeholder="street name"><br>
+									<input type="text" id="city" placeholder="city"><br>
+									<input type="text" id="state" placeholder="state"><br>
+									<input type="text" id="postal_code" placeholder="postal_code"><br><br>
+
+									<form>
+										<input type="radio" id="support" name='vote' value="support">
+										<label for="support">SUPPORT</label><br>
+
+										<input type="radio" id="oppose" name='vote' value="oppose">
+										<label for="oppose">OPPOSE</label><br>
+
+										<input type="radio" id="undecided" name='vote' value="undecided" checked>
+										<label for="undecided">UNDECIDED</label>
+
+									</form>
+									<button type="submit">Submit Address and Vote Preference</button>
+							</form>
+						</fieldset>
+					</div>
+					<div class="column">
+						<fieldset>
+							<div id='voter-data'>
+								<p class='subtitle'>Welcome! Please enter your address in the form.</p>
+								<p class='subtitle'>-- OR -- </p>
+								<p class='subtitle'>Use the map to Zoom and Click on your home location.</p>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+
+			<div class='column right-side-content'>
+				<div id="map" class='column'></div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+<script src="map.js"></script>
+<script src="icons.js"></script>
+<script src="test.js"></script>
+<script src="services.js"></script>
+
+</html>

@@ -1,0 +1,36 @@
+#info {
+	/* position: absolute; */
+	top: 0;
+	width: 100%;
+	height: 200px;
+}
+
+#map {
+	width: 640px;
+	height: 640px;
+	border-radius: 3%;
+	background-color: rgb(221, 236, 250);
+}
+
+.form-margin{
+	margin: 10px;
+}
+
+.address-confimation {
+	width: 640px;
+	background-color: rgb(255, 239, 188);
+}
+
+fieldset{
+	padding: 10px;
+	border-radius: 3%;
+	background-color: rgb(252, 250, 250);
+}
+
+.left-side-nav {
+	width: 30%;
+}
+
+.right-side-content {
+	width: 60%;
+}
