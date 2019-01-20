@@ -1,6 +1,7 @@
 $(function () {
 	console.log('map.js loaded ---');
-	loadTestVoters()
+	// loadTestVoters()
+	// loadAllVoters()
 	newVoterForm()
 	loadCompaignManagerView()
 	mapClickStreetAddress()
@@ -19,8 +20,8 @@ function loadTestVoters() {
 }
 
 // baseURL can be toggled local Rails server or Heroku
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
-// const baseURL = 'http://127.0.0.1:3000/api/'
+// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+const baseURL = 'http://127.0.0.1:3000/api/'
 
 // API service to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -37,14 +38,17 @@ L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
 
+// listens for click of button, calls loadAllVoters(), pans out to see Eastern US
 function loadCompaignManagerView() {
 	$('#load-campaign-manager-view').on('click', function (event) {
 		event.preventDefault()
+		event.stopPropagation()
 		map.setView([42.358056, -71.063611], 5);
 		loadAllVoters()
 	})
 }
 
+// gets all voters from database, passes the response to loadMarkers()
 function loadAllVoters() {
 	$.ajax({
 		url: baseURL + 'voters',
@@ -55,6 +59,7 @@ function loadAllVoters() {
 	})
 }
 
+// receives an array of voter data; accesses the geocode field of each; creates a new Marker on the map
 function loadMarkers(markers) {
 	markers.forEach((marker) => {
 		if (marker) {
@@ -62,10 +67,14 @@ function loadMarkers(markers) {
 				console.log("error with geocode request: ", error);
 			})
 			function onResult(data) {
-				marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
-				new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
-					icon: icons[marker.vote_preference]
-				}).addTo(map)
+				if (data.Response.View[0].Result != 'undefined') {
+					marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
+					new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
+						icon: icons[marker.vote_preference]
+					}).addTo(map)
+				} else {
+					return;
+				}
 			}
 		}
 	})
@@ -78,7 +87,7 @@ function newVoterForm() {
 
 		let obj = {
 			voter: {
-				geocode: '',
+				geocode: '', // initially, this is empty
 				street_number: $('#street_number').val(),
 				street_name: $('#street_name').val(),
 				city: $('#city').val(),
@@ -89,6 +98,7 @@ function newVoterForm() {
 			}
 		}
 
+		// geocode is retreived from API
 		geocoder.geocode({ searchText: obj.voter.address_string }, onResult, function (error) {
 			console.log("error with geocode request: ", error);
 		})
@@ -102,8 +112,9 @@ function newVoterForm() {
 				data: obj
 			}).done(function (data) {
 				let voter = new Voter(data)
-				let voterData = voter.voterHTML()
-				showVoterData(voterData)
+
+				// data is replaced on the DOM, in the address form, ready for Voter to choose preference
+				loadVoterDataToAddressForm(voter)
 
 				new L.marker(voter.geocode.split(',').map(c => parseFloat(c)), {
 					icon: icons[voter.vote_preference]
@@ -154,17 +165,19 @@ function mapClickStreetAddress() {
 			data: obj
 		}).done(function (data) {
 			let voter = new Voter(data)
-			let voterData = voter.voterHTML()
-			showVoterData(voterData)
-			new L.marker(voter.geocode.split(',').map(c => parseFloat(c)), {
-				icon: icons[voter.vote_preference]
-			}).addTo(map)
+
+			// data is replaced on the DOM, in the address form, ready for Voter to choose preference
+			loadVoterDataToAddressForm(voter)
 		})
 	}
 }
 
-function showVoterData(data) {
-	$('#voter-data').html(data)
+function loadVoterDataToAddressForm(data) {
+	$('#street_number').val(data.street_number)
+	$('#street_name').val(data.street_name)
+	$('#city').val(data.city)
+	$('#state').val(data.state)
+	$('#postal_code').val(data.postal_code)
 }
 
 class Voter {

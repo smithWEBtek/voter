@@ -1,11 +1,63 @@
+# README
+
+## Summary
+This app provides a live clickable map for voters to indicate their voting preference. The user can either enter their address in a form and have it geocoded to the map, or vice-versa, they can click on the map to populate the address form. 
+
+Once the form is completed, the user can choose from 3 options:  Support, Oppose or Undecided.
+
+The voter preference will then be stored in the database, with an appropriate map marker colored by their choice: 
+Yellow  = Undecided
+Red = Oppose
+Green = Support
+
+## Configuration and Setup
+* Ruby version: 2.4.4
+
+* System dependencies: Gemfile contains required dependencies. 
+
+* Configuration: 
+	- This is a Rails app in API mode, to provide data for the Voter Preference app.
+
+* Database creation:
+	- Postgresql requires database creation, which is included in a custom rake tasks below.
+
+* Database initialization:
+	- To create the database, migrate the tables, seed the database and start your local Rails server, please run: 
+	`$ rake db:dcms`
+	- see this task here: `app/lib/tasks/dcms.rake`
+
+	- To do the same steps after deployment to Heroku, please run: 
+	`$ rake db:hdcms` 
+	- see this task here: `app/lib/tasks/hdcms.rake`
+
+* How to run the test suite
+	- Currently there is not a test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+	- The app is comprised of 2 github repositories, 1 for the client, and 1 for the api.
+
+	[CLIENT](https://github.com/smithWEBtek/voter-preference-client)
+
+	[API](https://github.com/smithWEBtek/voter-preference-api)
+
+
+
 ## Setup notes
 - `index.html` has required dependencies in CDN link tags
+
 - the Leaflet JavaScript library is included as physical files in the directory structure, (but could also be a CDN link if preferred).
+
 - `index.html` has script tag link to `map.js`
+
 - the files `composer.json` and `index.php` are present simply for ease of deployment to Heroku, otherwise these 2 files have no functional effect on the app.
+
 - `Bulma` is used as a css library for ease of quick deployment, with a responsive, clean layout
+
 - `map.css` has any custom css that is required
 
+- Here.com is used for geocoding and reverse geocoding
 
 ## Display
 The `index.html` page has 4 areas:

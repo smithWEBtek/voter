@@ -26,11 +26,12 @@ fieldset{
 	border-radius: 3%;
 	background-color: rgb(252, 250, 250);
 }
-
-.left-side-nav {
-	width: 30%;
+ 
+#logo-image{
+	width: 80px;
+	height: 90px;
 }
 
-.right-side-content {
-	width: 60%;
+#submit-vote-preference{
+ align-content: center;
 }
