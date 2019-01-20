@@ -34,7 +34,7 @@ let geocoder = platform.getGeocodingService();
 
 // instance of Leaflet map, centered on Boston
 let map = L.map('map').setView([42.358056, -71.063611], 12);
-L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
 
