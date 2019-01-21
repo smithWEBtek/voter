@@ -1,27 +1,23 @@
 $(function () {
 	console.log('map.js loaded ---');
-	// loadTestVoters()
+
 	// loadAllVoters()
+	refresh()
 	newVoterForm()
 	loadCompaignManagerView()
 	mapClickStreetAddress()
 });
 
-let testVoters = [
-	[42.346268, -71.095764],
-	[42.380098, -71.116629],
-	[42.36306, - 71.00639]
-]
-
-function loadTestVoters() {
-	for (let i = 0; i < testVoters.length; i++) {
-		testVoters[i] = new L.marker(testVoters[i], { icon: support }).addTo(map)
-	}
+function refresh() {
+	$('img#logo-image').on('click', function (event) {
+		event.preventDefault()
+		map.setView([42.358056, -71.063611], 12);
+	})
 }
 
-// baseURL can be toggled local Rails server or Heroku
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+// baseURL can be toggled to local Rails server or Heroku
 // const baseURL = 'http://127.0.0.1:3000/api/'
+const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
 // API service to geocode street address and vice versa
 let platform = new H.service.Platform({
