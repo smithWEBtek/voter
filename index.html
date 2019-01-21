@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="map.css">
+	<link rel="stylesheet" href="d3.css">
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
@@ -23,7 +24,6 @@
 		<nav class="navbar" role="navigation" aria-label="main navigation">
 			<div class="navbar-brand">
 				<img src="lib/img/traffic-light.svg" id='logo-image' alt="logo">
-
 				<div class="navbar-item">
 					<div class="buttons">
 						<a class="button is-primary" id='load-boston-view'>Boston</a>
@@ -54,7 +54,7 @@
 					</div>
 				</div>
 				<div>
-					<div>
+					<div class="column">
 						<div id="voter-preference-form-div">
 							<form id='voter-preference-form' class='form-margin'>
 								<input type="text" id="street_number" placeholder="street number">
@@ -83,9 +83,18 @@
 					</div>
 				</div>
 				</fieldset>
+
+				<!-- D3 bar chart -->
+				<div class="columns">
+					<div class="column">
+						<div class="canvas"></div>
+					</div>
+				</div>
+
 			</div>
+
 			<div class='column'>
-				<div id="map" class='column'></div>
+				<div id="map"></div>
 			</div>
 		</div>
 	</div>
@@ -93,5 +102,7 @@
 <script src="map.js"></script>
 <script src="icons.js"></script>
 <script src="views.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
+<script src="d3.js"></script>
 
 </html>

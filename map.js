@@ -7,11 +7,12 @@ $(function () {
 	nationalView()
 	mapClickStreetAddress()
 	loadAllVoters()
+	loadStats()
 });
 
 // baseURL can be switched to local Rails server or Heroku
-// const baseURL = 'http://127.0.0.1:3000/api/'
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+const baseURL = 'http://127.0.0.1:3000/api/'
+// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -41,6 +42,7 @@ function resetAddressForm() {
 	$('#voter-preference-form-div').css("background-color", "rgb(250, 240, 211")
 	$('#submit-vote-preference-button').css("background-color", "rgb(250, 240, 211")
 	$('#geocode').html('')
+	loadStats()
 }
 
 // get all voters from database, pass the response to loadMarkers()
