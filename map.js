@@ -8,8 +8,8 @@ $(function () {
 });
 
 // baseURL can be switched to local Rails server or Heroku
-// const baseURL = 'http://127.0.0.1:3000/api/'
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+const baseURL = 'http://127.0.0.1:3000/api/'
+// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -53,12 +53,13 @@ function refresh() {
 	$('img#logo-image').on('click', function (event) {
 		event.preventDefault()
 		map.setView([42.358056, -71.063611], 12);
-		resetAddressForm()
 	})
+	resetAddressForm()
 }
 
 // clear address form fields; reset background color of form and submit button
 function resetAddressForm() {
+	$("input[name='vote']").val(["undecided"])
 	$('#street_number').val('')
 	$('#street_name').val('')
 	$('#city').val('')
@@ -66,7 +67,6 @@ function resetAddressForm() {
 	$('#postal_code').val('')
 	$('#voter-preference-form-div').css("background-color", "rgb(250, 240, 211")
 	$('#submit-vote-preference-button').css("background-color", "rgb(250, 240, 211")
-	$("input[name='vote']").val(["none"])
 	$('#geocode').html('')
 }
 
@@ -89,13 +89,12 @@ function loadMarkers(markers) {
 				console.log("error with geocode request: ", error);
 			})
 			function onResult(data) {
-				if (data.Response.View[0].Result != 'undefined') {
+				if (data && data.Response.View[0]) {
 					marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
+
 					new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
 						icon: icons[marker.vote_preference]
 					}).addTo(map)
-				} else {
-					return;
 				}
 			}
 		}
@@ -106,6 +105,12 @@ function loadMarkers(markers) {
 function newVoterForm() {
 	$('button#submit-vote-preference-button').on('click', function (event) {
 		event.preventDefault()
+
+		if (!$('#street_number').val()) {
+			console.log("no valid street_number");
+			return;
+		}
+
 		let obj = {
 			voter: {
 				geocode: '', // initially, geocode attribute is empty
@@ -152,7 +157,7 @@ function mapClickStreetAddress() {
 	map.addEventListener('click', function (event) {
 		geocode = [event.latlng.lat, event.latlng.lng].toString()
 		let prox = `${event.latlng.lat.toString()},`
-		prox += `${event.latlng.lng.toString()}, 150`
+		prox += `${event.latlng.lng.toString()}, 100`
 
 		let reverseGeocodingParameters = {
 			prox: prox, // (example)prox: '52.5309,13.3847,150',
@@ -168,31 +173,31 @@ function mapClickStreetAddress() {
 		let address = result.Response.View[0].Result[0].Location.Address
 		console.log('the address_string: ', address.Label);
 
-		let obj = {
-			voter: {
-				address_string: address.Label,
-				street_number: address.HouseNumber,
-				street_name: address.Street,
-				city: address.City,
-				state: address.State,
-				postal_code: address.PostalCode,
-				geocode: geocode
-			}
+		// let obj = {
+		let voter = {
+			address_string: address.Label,
+			street_number: address.HouseNumber,
+			street_name: address.Street,
+			city: address.City,
+			state: address.State,
+			postal_code: address.PostalCode,
+			geocode: geocode
 		}
 
-		$.ajax({
-			url: baseURL + 'voters',
-			method: 'post',
-			data: obj
-		}).done(function (data) {
-			let voter = new Voter(data)
+		// a valid LatLng does NOT mean we have a valid street address ...
+		if (!voter.street_number || !voter.street_name) {
+			resetAddressForm()
 
-			// data is replaced on the DOM, in the address form, ready for Voter to choose preference
+			$('#geocode').html('<p>Please click again, there is no valid address within 100 meters of where you clicked.</p>').css('background-color', 'pink')
+			return;
+		} else {
+
+			// if we have a valid street address, the data is replaced on the DOM, in the address form, for Voter to vote
 			loadVoterDataToAddressForm(voter)
 			$('#voter-preference-form-div').css("background-color", "rgb(183, 240, 160)");
 			$('#submit-vote-preference-button').css("background-color", "rgb(183, 240, 160)");
 			$('#geocode').html(`<p>geocode: ${voter.geocode}</p>`)
-		})
+		}
 	}
 }
 
@@ -203,6 +208,7 @@ function loadVoterDataToAddressForm(data) {
 	$('#city').val(data.city)
 	$('#state').val(data.state)
 	$('#postal_code').val(data.postal_code)
+	$('#geocode').css('background-color', 'rgb(201, 214, 228)')
 }
 
 class Voter {
