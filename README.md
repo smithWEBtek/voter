@@ -1,5 +1,3 @@
-# README
-
 ## Summary
 This app provides a live clickable map for voters to indicate their voting preference. The user can either enter their address in a form and have it geocoded to the map, or vice-versa, they can click on the map to populate the address form. 
 
@@ -9,6 +7,8 @@ The voter preference will then be stored in the database, with an appropriate ma
 Yellow  = Undecided
 Red = Oppose
 Green = Support
+
+A live reloading D3 bar chart represents the current counts of the 3 voter preference groups.
 
 ## Configuration and Setup
 * Ruby version: 2.4.4
@@ -51,7 +51,7 @@ Green = Support
 
 - `index.html` has script tag link to `map.js`
 
-- the files `composer.json` and `index.php` are present simply for ease of deployment to Heroku, otherwise these 2 files have no functional effect on the app.
+- the files `composer.json` and `index.php` are present for ease of deployment to Heroku, otherwise these 2 files have no functional effect on the app.
 
 - `Bulma` is used as a css library for ease of quick deployment, with a responsive, clean layout
 
@@ -59,12 +59,14 @@ Green = Support
 
 - Here.com is used for geocoding and reverse geocoding
 
+- D3 is used for live data visualization
+
 ## Display
 The `index.html` page has 4 areas:
-1. `map div`
-2. `address form`
+1. `nav bar`
+2. `map div`
 3. `voter preference form` 
-4. `app response div`
+4. `D3 data visualization bar chart`
 
 
 ## Voter Interaction Flow
@@ -106,33 +108,15 @@ The `index.html` page has 4 areas:
 
 8. The Voter Object is updated with the chosen preference and saved to the PostgreSQL database.
 
-9. The map is updated with a map point icon:
-	- The Voter's preference is shown by color
+9. The map is updated with a colored map point icon based on the Voter's preference
 	- Green = Support
 	- Red = Oppose
 	- Yellow = Undecided
 
-9. The Voter is prompted/invited to:
-	- Complete a survey of election topics.
-	- Attend a local informational event.
-
-## Campaign Manager View
+## Views
 	
-- The Campaign Manager is given an unpublished URL directing them to their view of the map.
-
-- At the url, the Campaign Manager is required to login and authenticate.
+- The app includes 3 views including Boston, New England and US national view.
 
 - The map displays the entire voter database table, with markers colored by the preference of each individual voter
 
-- A D3 bar graph shows interesting visual representation of the data
-- Analysis is performed to identify:
-
-	- Areas of highest density of SUPPORTING voters
-		- To convert voters to advocates
-		- To convert advocates to campaign volunteers
-		- To convert campaign volunteers to campaign workers
-
-	- Areas of highest density of OPPOSING voters
-		- To stage informational events
-		- To go door to door, wining hearts and minds
-		- To convert opposers to supporters
+- A D3 bar graph shows a visual representation of the data
