@@ -11,22 +11,24 @@ $(function () {
 // const baseURL = 'http://127.0.0.1:3000/api/'
 const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
-// API service to geocode street address and vice versa
+// API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
+	useCIT: true,
 	'app_id': 'HCIyXQOhmMjxjUE3NteH',
-	'app_code': 'ax8hst6McVJjLFKhWRkz1A'
+	'app_code': 'ax8hst6McVJjLFKhWRkz1A',
+	useHTTPS: true
 });
 
-// create an instance of the API service from www.here.com
+// create an instance of the here.com API service
 let geocoder = platform.getGeocodingService();
 
-// instance of Leaflet map, centered on Boston
+// create an instance of Leaflet map, centered on Boston, zoom level 12
 let map = L.map('map').setView([42.358056, -71.063611], 12);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// listens for click of button, calls loadAllVoters(), pans out to see national view
+// listen for click of button, call loadAllVoters(), pan out to national view, zoom level 3
 function nationalView() {
 	$('#load-national-view').on('click', function (event) {
 		event.preventDefault()
@@ -36,7 +38,7 @@ function nationalView() {
 	})
 }
 
-// listens for click of button, calls loadAllVoters(), pans out to see New England
+// listen for click of button, call loadAllVoters(), pans out to greater Boston, zoom level 10
 function newEnglandView() {
 	$('#load-new-england-view').on('click', function (event) {
 		event.preventDefault()
@@ -46,7 +48,7 @@ function newEnglandView() {
 	})
 }
 
-// resets the map view to original page load; connected to click event on logo-image
+// reset the map view to original page load; connected to click event on logo-image
 function refresh() {
 	$('img#logo-image').on('click', function (event) {
 		event.preventDefault()
@@ -55,7 +57,7 @@ function refresh() {
 	})
 }
 
-// clear address form fields; reset background color of form and submitt button
+// clear address form fields; reset background color of form and submit button
 function resetAddressForm() {
 	$('#street_number').val('')
 	$('#street_name').val('')
@@ -68,7 +70,7 @@ function resetAddressForm() {
 	$('#geocode').html('')
 }
 
-// gets all voters from database, passes the response to loadMarkers()
+// get all voters from database, pass the response to loadMarkers()
 function loadAllVoters() {
 	$.ajax({
 		url: baseURL + 'voters',
@@ -79,7 +81,7 @@ function loadAllVoters() {
 	})
 }
 
-// receives an array of voter data; accesses the geocode field of each; creates a new Marker on the map
+// receive array of voter data; access the geocode field of each; create a new Marker on the map
 function loadMarkers(markers) {
 	markers.forEach((marker) => {
 		if (marker) {
@@ -144,7 +146,7 @@ function newVoterForm() {
 	})
 }
 
-// voter clicks map, LatLng is converted to street address for validation by user
+// voter clicks map, LatLng is converted to street address for validation by user, before voting
 function mapClickStreetAddress() {
 	let geocode;
 	map.addEventListener('click', function (event) {
@@ -153,8 +155,7 @@ function mapClickStreetAddress() {
 		prox += `${event.latlng.lng.toString()}, 150`
 
 		let reverseGeocodingParameters = {
-			// prox: '52.5309,13.3847,150',
-			prox: prox,
+			prox: prox, // (example)prox: '52.5309,13.3847,150',
 			mode: 'retrieveAddresses',
 			maxresults: 1
 		};
@@ -165,7 +166,7 @@ function mapClickStreetAddress() {
 	})
 	function onSuccess(result) {
 		let address = result.Response.View[0].Result[0].Location.Address
-		console.log('the address_string: ', address);
+		console.log('the address_string: ', address.Label);
 
 		let obj = {
 			voter: {
