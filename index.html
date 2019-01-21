@@ -19,12 +19,19 @@
 
 <body>
 	<div class='section'>
+		<h1 class="title">Vote Preference</h1>
 		<nav class="navbar" role="navigation" aria-label="main navigation">
 			<div class="navbar-brand">
 				<img src="lib/img/traffic-light.svg" id='logo-image' alt="logo">
+
 				<div class="navbar-item">
 					<div class="buttons">
-						<a class="button is-primary" id='load-campaign-manager-view'>Campaign Manager View</a>
+						<a class="button is-primary" id='load-new-england-view'>New England View</a>
+					</div>
+				</div>
+				<div class="navbar-item">
+					<div class="buttons">
+						<a class="button is-primary" id='load-national-view'>National View</a>
 					</div>
 				</div>
 			</div>
@@ -33,42 +40,57 @@
 		<div class='columns'>
 			<div class="column">
 				<div class='columns'>
+
 					<div class="column">
 						<fieldset>
 							<div id='voter-data'>
 								<h2 class='is-2'>Welcome! Please <strong>enter your address</strong> in the form. <br>
-									Or <strong>use the map</strong> to Zoom and Click on your home location. When your address appears correctly
+									Or <strong>use the map to Zoom and Click </strong> on your home location. When your address appears correctly
 									in the form, you can then use the buttons to choose your vote preference and click Submit Vote Preference.</h2>
 							</div>
 					</div>
+
 				</div>
 				<div>
 					<div>
-						<form id='voter-preference-form' class='form-margin'>
-							<input type="text" id="street_number" placeholder="street number">
-							<input type="text" id="street_name" placeholder="street name">
-							<input type="text" id="city" placeholder="city">
-							<input type="text" id="state" placeholder="state">
-							<input type="text" id="postal_code" placeholder="postal_code">
+						<div id="voter-preference-form-div">
+							<form id='voter-preference-form' class='form-margin'>
+								<input type="text" id="street_number" placeholder="street number">
+								<input type="text" id="street_name" placeholder="street name">
+								<input type="text" id="city" placeholder="city">
+								<input type="text" id="state" placeholder="state">
+								<input type="text" id="postal_code" placeholder="postal_code">
+								<div id="geocode"></div>
+						</div>
+
+						<div id="vote-div">
 							<hr>
 							<input type="radio" id="support" name='vote' value="support">
 							<label for="support">SUPPORT</label>
 							<input type="radio" id="oppose" name='vote' value="oppose">
 							<label for="oppose">OPPOSE</label>
-							<input type="radio" id="undecided" name='vote' value="undecided" checked>
-							<label for="undecided">UNDECIDED</label><br>
+							<input type="radio" id="undecided" name='vote' value="undecided">
+							<label for="undecided">UNDECIDED</label>
+							<input type="radio" id="none" name='vote' value="none">
+							<label for="none">NONE</label>
+							<br>
+							<br>
 							<div class="buttons">
-								<button class="button is-primary" id='submit-vote-preference'>Submit Vote Preference</button>
+								<button class="button" id='submit-vote-preference-button'>Submit Vote Preference</button>
 							</div>
+							<hr>
+						</div>
 						</form>
 					</div>
 				</div>
 				</fieldset>
-				<div class='column'>
-					<div id="map" class='column'></div>
-				</div>
+			</div>
+
+			<div class='column'>
+				<div id="map" class='column'></div>
 			</div>
 		</div>
+	</div>
 </body>
 
 <script src="map.js"></script>

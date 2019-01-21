@@ -1,21 +1,13 @@
+// document ready, load listeners
 $(function () {
-	console.log('map.js loaded ---');
-
-	// loadAllVoters()
 	refresh()
 	newVoterForm()
-	loadCompaignManagerView()
+	nationalView()
+	newEnglandView()
 	mapClickStreetAddress()
 });
 
-function refresh() {
-	$('img#logo-image').on('click', function (event) {
-		event.preventDefault()
-		map.setView([42.358056, -71.063611], 12);
-	})
-}
-
-// baseURL can be toggled to local Rails server or Heroku
+// baseURL can be switched to local Rails server or Heroku
 // const baseURL = 'http://127.0.0.1:3000/api/'
 const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
@@ -25,7 +17,7 @@ let platform = new H.service.Platform({
 	'app_code': 'ax8hst6McVJjLFKhWRkz1A'
 });
 
-// instance of the API service
+// create an instance of the API service from www.here.com
 let geocoder = platform.getGeocodingService();
 
 // instance of Leaflet map, centered on Boston
@@ -35,13 +27,45 @@ L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // listens for click of button, calls loadAllVoters(), pans out to see Eastern US
-function loadCompaignManagerView() {
-	$('#load-campaign-manager-view').on('click', function (event) {
+function nationalView() {
+	$('#load-national-view').on('click', function (event) {
 		event.preventDefault()
 		event.stopPropagation()
-		map.setView([42.358056, -71.063611], 5);
+		map.setView([42.358056, -71.063611], 4);
 		loadAllVoters()
 	})
+}
+
+// listens for click of button, calls loadAllVoters(), pans out to see New England
+function newEnglandView() {
+	$('#load-new-england-view').on('click', function (event) {
+		event.preventDefault()
+		event.stopPropagation()
+		map.setView([42.358056, -71.063611], 10);
+		loadAllVoters()
+	})
+}
+
+// resets the map view to original page load; connected to click event on logo-image
+function refresh() {
+	$('img#logo-image').on('click', function (event) {
+		event.preventDefault()
+		map.setView([42.358056, -71.063611], 12);
+		resetAddressForm()
+	})
+}
+
+// clear address form fields; reset background color of form and submitt button
+function resetAddressForm() {
+	$('#street_number').val('')
+	$('#street_name').val('')
+	$('#city').val('')
+	$('#state').val('')
+	$('#postal_code').val('')
+	$('#voter-preference-form-div').css("background-color", "rgb(250, 240, 211")
+	$('#submit-vote-preference-button').css("background-color", "rgb(250, 240, 211")
+	$("input[name='vote']").val(["none"])
+	$('#geocode').html('')
 }
 
 // gets all voters from database, passes the response to loadMarkers()
@@ -78,12 +102,11 @@ function loadMarkers(markers) {
 
 // voter fills out address form, LatLng are derived by API, saved to database and rendered on map.
 function newVoterForm() {
-	$('form#voter-preference-form').on('submit', function (event) {
+	$('button#submit-vote-preference-button').on('click', function (event) {
 		event.preventDefault()
-
 		let obj = {
 			voter: {
-				geocode: '', // initially, this is empty
+				geocode: '', // initially, geocode attribute is empty
 				street_number: $('#street_number').val(),
 				street_name: $('#street_name').val(),
 				city: $('#city').val(),
@@ -94,7 +117,7 @@ function newVoterForm() {
 			}
 		}
 
-		// geocode is retreived from API
+		// geocode attribute is then retreived from API
 		geocoder.geocode({ searchText: obj.voter.address_string }, onResult, function (error) {
 			console.log("error with geocode request: ", error);
 		})
@@ -115,6 +138,7 @@ function newVoterForm() {
 				new L.marker(voter.geocode.split(',').map(c => parseFloat(c)), {
 					icon: icons[voter.vote_preference]
 				}).addTo(map)
+				resetAddressForm()
 			})
 		}
 	})
@@ -164,10 +188,14 @@ function mapClickStreetAddress() {
 
 			// data is replaced on the DOM, in the address form, ready for Voter to choose preference
 			loadVoterDataToAddressForm(voter)
+			$('#voter-preference-form-div').css("background-color", "rgb(183, 240, 160)");
+			$('#submit-vote-preference-button').css("background-color", "rgb(183, 240, 160)");
+			$('#geocode').html(`<p>geocode: ${voter.geocode}</p>`)
 		})
 	}
 }
 
+// load address form from map click
 function loadVoterDataToAddressForm(data) {
 	$('#street_number').val(data.street_number)
 	$('#street_name').val(data.street_name)
