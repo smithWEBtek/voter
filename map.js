@@ -2,9 +2,11 @@
 $(function () {
 	refresh()
 	newVoterForm()
-	nationalView()
+	bostonView()
 	newEnglandView()
+	nationalView()
 	mapClickStreetAddress()
+	loadAllVoters()
 });
 
 // baseURL can be switched to local Rails server or Heroku
@@ -27,35 +29,6 @@ let map = L.map('map').setView([42.358056, -71.063611], 12);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
-
-// listen for click of button, call loadAllVoters(), pan out to national view, zoom level 3
-function nationalView() {
-	$('#load-national-view').on('click', function (event) {
-		event.preventDefault()
-		event.stopPropagation()
-		map.setView([38.645955, -95.153003], 3);
-		loadAllVoters()
-	})
-}
-
-// listen for click of button, call loadAllVoters(), pans out to greater Boston, zoom level 10
-function newEnglandView() {
-	$('#load-new-england-view').on('click', function (event) {
-		event.preventDefault()
-		event.stopPropagation()
-		map.setView([42.358056, -71.063611], 10);
-		loadAllVoters()
-	})
-}
-
-// reset the map view to original page load; connected to click event on logo-image
-function refresh() {
-	$('img#logo-image').on('click', function (event) {
-		event.preventDefault()
-		map.setView([42.358056, -71.063611], 12);
-	})
-	resetAddressForm()
-}
 
 // clear address form fields; reset background color of form and submit button
 function resetAddressForm() {
@@ -234,15 +207,4 @@ Voter.prototype.voterHTML = function () {
 			<p>${this.vote_preference ? this.vote_preference : ""}</p>
 		</div>
 	`)
-}
-
-function infoDiv() {
-	let infoDiv = (`
-		<div id='info'>
-			<h1 id='name' class='subtitle'>title</h1>
-			<h1 id='LatLng' class='subtitle'>LatLng</h1>
-			<h1 id='link_anchor' class='subtitle'><a href='' target='_blank'>link</a></h1>
-		</div >
-	`)
-	document.getElementById('voter-data').innerHTML = infoDiv;
 }
