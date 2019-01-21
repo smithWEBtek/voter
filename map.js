@@ -22,16 +22,16 @@ let geocoder = platform.getGeocodingService();
 
 // instance of Leaflet map, centered on Boston
 let map = L.map('map').setView([42.358056, -71.063611], 12);
-L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('http://{s}a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// listens for click of button, calls loadAllVoters(), pans out to see Eastern US
+// listens for click of button, calls loadAllVoters(), pans out to see national view
 function nationalView() {
 	$('#load-national-view').on('click', function (event) {
 		event.preventDefault()
 		event.stopPropagation()
-		map.setView([42.358056, -71.063611], 4);
+		map.setView([38.645955, -95.153003], 3);
 		loadAllVoters()
 	})
 }
