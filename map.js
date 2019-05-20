@@ -17,8 +17,10 @@ const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
 	useCIT: true,
-	'app_id': 'HCIyXQOhmMjxjUE3NteH',
-	'app_code': 'ax8hst6McVJjLFKhWRkz1A',
+	// 'app_id': 'HCIyXQOhmMjxjUE3NteH',
+	'app_id': ENV['APP_ID'],
+	// 'app_code': 'ax8hst6McVJjLFKhWRkz1A',
+	'app_code': ENV['APP_CODE'],
 	useHTTPS: true
 });
 
