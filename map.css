@@ -43,3 +43,41 @@ fieldset{
 #geocode{
 	background-color: rgb(201, 214, 228);
 }
+
+/* fonts */
+.title{
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size:1.5em;
+}
+
+/* navigation */
+.nav{
+	display:flex;
+}
+ 
+.nav-item{
+	justify-content:space-around;
+	margin:3px;
+}
+
+#nav-item-group{
+	display:flex;
+	min-height: 10vh;
+	align-items:center;
+}
+
+.row{
+	display:flex;
+}
+
+.button{
+	background-color: rgb(48, 78, 102);
+	color: rgb(255, 255, 255);
+	padding: 2px;
+	border-radius: 15%;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.button:hover{
+	background-color: rgb(151, 187, 216);
+}

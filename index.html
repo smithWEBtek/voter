@@ -7,8 +7,6 @@
 
 	<script src='lib/leaflet/leaflet.js'></script>
 	<link rel="stylesheet" href="/lib/leaflet/leaflet.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="map.css">
 	<link rel="stylesheet" href="d3.css">
 
@@ -19,85 +17,82 @@
 </head>
 
 <body>
-	<div class='section'>
-		<h1 class="title">Vote Preference</h1>
-		<nav class="navbar" role="navigation" aria-label="main navigation">
-			<div class="navbar-brand">
-				<img src="lib/img/traffic-light.svg" id='logo-image' alt="logo">
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-boston-view'>Boston</a>
-					</div>
-				</div>
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-new-england-view'>New England</a>
-					</div>
-				</div>
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-national-view'>National</a>
-					</div>
+	<div class='nav'>
+		<div id="nav-item-group">
+			<h3 class='title'><strong>Vote Preference</strong></h3>
+			<img src="lib/img/traffic-light.svg" id='logo-image' alt="logo">
+			<div class="nav-item">
+				<div class="button">
+					<a id='load-boston-view'>Boston</a>
 				</div>
 			</div>
-		</nav>
-		<div class='columns'>
-			<div class="column">
-				<div class='columns'>
-					<div class="column">
-						<fieldset>
-							<div id='voter-data'>
-								<h2 class='is-2'>Welcome! Please <strong>enter your address</strong> in the form. <br>
-									Or <strong>use the map to Zoom and Click </strong> on your home location. When your address appears correctly
-									in the form, you can then use the buttons to choose your vote preference and click Submit Vote Preference.</h2>
-							</div>
-					</div>
+			<div class="nav-item">
+				<div class="button">
+					<a id='load-new-england-view'>New England</a>
 				</div>
-				<div>
-					<div class="column">
-						<div id="voter-preference-form-div">
-							<form id='voter-preference-form' class='form-margin'>
-								<input type="text" id="street_number" placeholder="street number">
-								<input type="text" id="street_name" placeholder="street name">
-								<input type="text" id="city" placeholder="city">
-								<input type="text" id="state" placeholder="state">
-								<input type="text" id="postal_code" placeholder="postal_code">
-								<div id="geocode"></div>
-						</div>
-						<div id="vote-div">
-							<hr>
-							<input type="radio" id="support" name='vote' value="support">
-							<label for="support">SUPPORT</label>
-							<input type="radio" id="oppose" name='vote' value="oppose">
-							<label for="oppose">OPPOSE</label>
-							<input type="radio" id="undecided" name='vote' value="undecided">
-							<label for="undecided">UNDECIDED</label>
-							<br>
-							<br>
-							<div class="buttons">
-								<button class="button" id='submit-vote-preference-button'>Submit Vote Preference</button>
-							</div>
-							<hr>
-						</div>
-						</form>
-					</div>
-				</div>
-				</fieldset>
-
-				<!-- D3 bar chart -->
-				<div class="columns">
-					<div class="column">
-						<div class="canvas"></div>
-					</div>
-				</div>
-
 			</div>
-
-			<div class='column'>
-				<div id="map"></div>
+			<div class="nav-item">
+				<div class="button">
+					<a id='load-national-view'>National</a>
+				</div>
 			</div>
 		</div>
 	</div>
+	</div>
+
+	<div>
+		<fieldset>
+			<div id='voter-data'>
+				<h2 class='is-2'>Welcome! Please <strong>enter your address</strong> in the form. <br>
+					Or <strong>use the map to Zoom and Click </strong> on your home location. When your address appears correctly
+					in the form, you can then use the buttons to choose your vote preference and click Submit Vote Preference.</h2>
+			</div>
+	</div>
+	</div>
+	<div>
+		<div class="column">
+			<div id="voter-preference-form-div">
+				<form id='voter-preference-form' class='form-margin'>
+					<input type="text" id="street_number" placeholder="street number">
+					<input type="text" id="street_name" placeholder="street name">
+					<input type="text" id="city" placeholder="city">
+					<input type="text" id="state" placeholder="state">
+					<input type="text" id="postal_code" placeholder="postal_code">
+					<div id="geocode"></div>
+			</div>
+			<div id="vote-div">
+				<hr>
+				<input type="radio" id="support" name='vote' value="support">
+				<label for="support">SUPPORT</label>
+				<input type="radio" id="oppose" name='vote' value="oppose">
+				<label for="oppose">OPPOSE</label>
+				<input type="radio" id="undecided" name='vote' value="undecided">
+				<label for="undecided">UNDECIDED</label>
+				<br>
+				<br>
+				<div class="button">
+					<button class="button" id='submit-vote-preference-button'>Submit Vote Preference</button>
+				</div>
+				<hr>
+			</div>
+			</form>
+		</div>
+	</div>
+	</fieldset>
+
+	<!-- D3 bar chart -->
+	<div class="columns">
+		<div class="column">
+			<div class="canvas"></div>
+		</div>
+	</div>
+
+	</div>
+
+	<div class='column'>
+		<div id="map"></div>
+	</div>
+
 </body>
 <script src="map.js"></script>
 <script src="icons.js"></script>
