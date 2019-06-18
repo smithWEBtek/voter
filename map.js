@@ -11,16 +11,14 @@ $(function () {
 });
 
 // baseURL can be switched to local Rails server or Heroku
-// const baseURL = 'http://127.0.0.1:3000/api/'
-const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
+const baseURL = 'http://127.0.0.1:3000/api/'
+// const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
 	useCIT: true,
-	// 'app_id': 'HCIyXQOhmMjxjUE3NteH',
-	'app_id': ENV['APP_ID'],
-	// 'app_code': 'ax8hst6McVJjLFKhWRkz1A',
-	'app_code': ENV['APP_CODE'],
+	'app_id': APP_ID,
+	'app_code': APP_CODE,
 	useHTTPS: true
 });
 
