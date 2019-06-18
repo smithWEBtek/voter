@@ -1,0 +1,25 @@
+{
+  "name": "voter-preference-client",
+  "version": "1.0.0",
+  "description": "This app provides a live clickable map for voters to indicate their voting preference. The user can either enter their address in a form and have it geocoded to the map, or vice-versa, they can click on the map to populate the address form.",
+  "main": "d3.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smithWEBtek/voter-preference-client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smithWEBtek/voter-preference-client/issues"
+  },
+  "homepage": "https://github.com/smithWEBtek/voter-preference-client#readme",
+  "dependencies": {
+    "dotenv": "^8.0.0"
+  }
+}

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // document ready, load listeners
 $(function () {
 	refresh()
@@ -17,8 +19,8 @@ const baseURL = 'https://voter-preference-api.herokuapp.com/api/'
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
 	useCIT: true,
-	'app_id': APP_ID,
-	'app_code': APP_CODE,
+	'app_id': process.env.HERE_APP_ID,
+	'app_code': process.env.HERE_APP_CODE,
 	useHTTPS: true
 });
 
