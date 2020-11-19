@@ -26,7 +26,7 @@ const yAxisGroup = graph.append('g')
 // get json data from Rails API scopes on Voter model
 function loadStats() {
 	$.ajax({
-		url: 'https://voter-preference-api.herokuapp.com/api/stats',
+		url: 'https://voter-api.smithwebtek.com/api/stats',
 		method: 'get',
 		dataType: 'json'
 	}).done(response => {
