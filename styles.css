@@ -4,10 +4,14 @@
 	height: 100%;
 }
 
+.data-entry-form {
+  margin-top: 16px;
+  width: 30%;
+}
+
 #map {
-	width: 100%;
+	width: 75%;
 	height: 640px;
-	border-radius: 3%;
 	background-color: rgb(221, 236, 250);
 }
 
@@ -22,8 +26,8 @@
 
 fieldset{
 	padding: 10px;
-	border-radius: 5%;
 	background-color: rgb(252, 250, 250);
+  width: 350px;
 }
  
 #logo-image{
@@ -31,9 +35,10 @@ fieldset{
 	height: 90px;
 }
  
-#voter-preference-form-div{
+#audio-upload-form {
 	background-color: rgb(250, 240, 211);
 	padding: 5px;
+  width: auto;
 }
 
 #submit-vote-preference-button{
@@ -42,4 +47,8 @@ fieldset{
 
 #geocode{
 	background-color: rgb(201, 214, 228);
+}
+
+.button {
+  margin: 12px 0;
 }

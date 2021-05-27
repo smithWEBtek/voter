@@ -2,107 +2,68 @@
 <html>
 
 <head>
-	<title>Vote Preference</title>
-	<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+  <title>Mattapan Mapping Audio Upload</title>
+  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
-	<script src='lib/leaflet/leaflet.js'></script>
-	<link rel="stylesheet" href="/lib/leaflet/leaflet.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="map.css">
-	<link rel="stylesheet" href="d3.css">
+  <script src='lib/leaflet/leaflet.js'></script>
+  <link rel="stylesheet" href="/lib/leaflet/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="styles.css">
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
-	<script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
 <body>
-	<div class='section'>
-		<h1 class="title">Vote Preference</h1>
-		<nav class="navbar" role="navigation" aria-label="main navigation">
-			<div class="navbar-brand">
-				<img src="lib/img/traffic-light.svg" id='logo-image' alt="logo">
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-boston-view'>Boston</a>
-					</div>
-				</div>
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-new-england-view'>New England</a>
-					</div>
-				</div>
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-primary" id='load-national-view'>National</a>
-					</div>
-				</div>
-			</div>
-		</nav>
-		<div class='columns'>
-			<div class="column">
-				<div class='columns'>
-					<div class="column">
-						<fieldset>
-							<div id='voter-data'>
-								<h2 class='is-2'>Welcome! Please <strong>enter your address</strong> in the form. <br>
-									Or <strong>use the map to Zoom and Click </strong> on your home location. When your address appears correctly
-									in the form, you can then use the buttons to choose your vote preference and click Submit Vote Preference.</h2>
-							</div>
-					</div>
-				</div>
-				<div>
-					<div class="column">
-						<div id="voter-preference-form-div">
-							<form id='voter-preference-form' class='form-margin'>
-								<input type="text" id="street_number" placeholder="street number">
-								<input type="text" id="street_name" placeholder="street name">
-								<input type="text" id="city" placeholder="city">
-								<input type="text" id="state" placeholder="state">
-								<input type="text" id="postal_code" placeholder="postal_code">
-								<div id="geocode"></div>
-						</div>
-						<div id="vote-div">
-							<hr>
-							<input type="radio" id="support" name='vote' value="support">
-							<label for="support">SUPPORT</label>
-							<input type="radio" id="oppose" name='vote' value="oppose">
-							<label for="oppose">OPPOSE</label>
-							<input type="radio" id="undecided" name='vote' value="undecided">
-							<label for="undecided">UNDECIDED</label>
-							<br>
-							<br>
-							<div class="buttons">
-								<button class="button" id='submit-vote-preference-button'>Submit Vote Preference</button>
-							</div>
-							<hr>
-						</div>
-						</form>
-					</div>
-				</div>
-				</fieldset>
+  <div class='section'>
+    <h1 class="title">Listen to Mattapan</h1>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <img src="lib/img/welcome.jpeg" id='mattpan-welcome' alt="welcome-to-mattapan">
+      </div>
+    </nav>
+    <div class='columns'>
+      <div class="data-entry-form">
+        <fieldset>
+          <div>
+            <h2 class='is-2'>To upload an audio file, please <strong>enter the street address</strong> in the form.
+              <br>
+              <br>
+              <p>Or <strong>use the map to Zoom and Click </strong> on the desired location until you see the correct
+                address in the form. You can also edit the form directly.</p>
+              <br>
+              <p>When your address appears correctly in the form, select your audio file, and click Upload Audio
+                button.</p>
+            </h2>
+            <button class="button is-primary" id='load-mattapan-view'>Refresh map</button>
+            <form id='audio-upload-form' class='form-margin'>
+              <input type="text" id="street_number" placeholder="street number">
+              <input type="text" id="street_name" placeholder="street name">
+              <input type="text" id="city" placeholder="city">
+              <input type="text" id="state" placeholder="state">
+              <input type="text" id="postal_code" placeholder="postal_code">
+              <br />
+              <br />
+              <h3 id="geocode-label">geocode (lat, lng):</h3>
+              <div id="geocode"></div>
+              <br />
+              <button class="button" id='upload-audio-file'>Upload Audio file</button>
+          </div>
+          </form>
+          <div class="column"></div>
+      </div>
+      <div class='column'>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+  </fieldset>
 
-				<!-- D3 bar chart -->
-				<div class="columns">
-					<div class="column">
-						<div class="canvas"></div>
-					</div>
-				</div>
-
-			</div>
-
-			<div class='column'>
-				<div id="map"></div>
-			</div>
-		</div>
-	</div>
+  </div>
 </body>
 <script src="map.js"></script>
-<script src="icons.js"></script>
-<script src="views.js"></script>
-<script src="https://d3js.org/d3.v5.js"></script>
-<script src="d3.js"></script>
 
 </html>

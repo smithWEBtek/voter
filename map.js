@@ -1,16 +1,12 @@
 // document ready, load listeners
 $(function () {
-	refresh()
-	newVoterForm()
-	bostonView()
-	newEnglandView()
-	nationalView()
+	newUploadForm()
+	mattapanCenterView()
 	mapClickStreetAddress()
-	loadAllVoters()
-	loadStats()
+	loadAllAudioMarkers()
 });
 
-const baseURL = 'https://voter-api.smithwebtek.com/api/'
+const baseURL = 'https://mattapan-audio-api.smithwebtek.com/api/'
 
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -23,30 +19,29 @@ let platform = new H.service.Platform({
 // create an instance of the here.com API service
 let geocoder = platform.getGeocodingService();
 
-// create an instance of Leaflet map, centered on Boston, zoom level 12
-let map = L.map('map').setView([42.358056, -71.063611], 12);
+// create an instance of Leaflet map, centered on Mattapan, zoom level 15
+// let map = L.map('map').setView([42.358056, -71.063611], 12);
+let map = L.map('map').setView([42.26722962533316,-71.09355255306583], 15);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
 
 // clear address form fields; reset background color of form and submit button
 function resetAddressForm() {
-	$("input[name='vote']").val(["undecided"])
 	$('#street_number').val('')
 	$('#street_name').val('')
 	$('#city').val('')
 	$('#state').val('')
 	$('#postal_code').val('')
-	$('#voter-preference-form-div').css("background-color", "rgb(250, 240, 211")
-	$('#submit-vote-preference-button').css("background-color", "rgb(250, 240, 211")
+	$('#upload-audio-form').css("background-color", "rgb(250, 240, 211")
+	$('#upload-audio-file').css("background-color", "rgb(250, 240, 211")
 	$('#geocode').html('')
-	loadStats()
 }
 
-// get all voters from database, pass the response to loadMarkers()
-function loadAllVoters() {
+// get all audio files from database, pass the response to loadMarkers()
+function loadAllAudioMarkers() {
 	$.ajax({
-		url: baseURL + 'voters',
+		url: baseURL + 'audio-files',
 		method: 'get',
 		dataType: 'json'
 	}).done(function (response) {
@@ -54,7 +49,7 @@ function loadAllVoters() {
 	})
 }
 
-// receive array of voter data; access the geocode field of each; create a new Marker on the map
+// receive array of audio file data; access the geocode field of each one; create a new Marker on the map
 function loadMarkers(markers) {
 	markers.forEach((marker) => {
 		if (marker) {
@@ -66,7 +61,7 @@ function loadMarkers(markers) {
 					marker.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
 
 					new L.marker(marker.geocode.split(',').map(c => parseFloat(c)), {
-						icon: icons[marker.vote_preference]
+            // icon: <add audio file icon here>
 					}).addTo(map)
 				}
 			}
@@ -74,9 +69,9 @@ function loadMarkers(markers) {
 	})
 }
 
-// voter fills out address form, LatLng are derived by API, saved to database and rendered on map.
-function newVoterForm() {
-	$('button#submit-vote-preference-button').on('click', function (event) {
+// user fills out address form, LatLng are derived by API, saved to database and rendered on map.
+function newUploadForm() {
+	$('button#upload-audio-file').on('click', function (event) {
 		event.preventDefault()
 
 		if (!$('#street_number').val()) {
@@ -85,38 +80,37 @@ function newVoterForm() {
 		}
 
 		let obj = {
-			voter: {
+			audioFile: {
 				geocode: '', // initially, geocode attribute is empty
 				street_number: $('#street_number').val(),
 				street_name: $('#street_name').val(),
 				city: $('#city').val(),
 				state: $('#state').val(),
 				postal_code: $('#postal_code').val(),
-				vote_preference: $("input[name='vote']:checked").val().toLowerCase(),
 				address_string: $('#street_number').val() + ' ' + $('#street_name').val() + ', ' + $('#city').val() + ', ' + $('#state').val() + ' ' + $('#postal_code').val()
 			}
 		}
 
 		// geocode attribute is then retreived from API
-		geocoder.geocode({ searchText: obj.voter.address_string }, onResult, function (error) {
+		geocoder.geocode({ searchText: obj.audioFile.address_string }, onResult, function (error) {
 			console.log("error with geocode request: ", error);
 		})
 
 		function onResult(data) {
-			obj.voter.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
+			obj.audioFile.geocode = [data.Response.View[0].Result[0].Location.DisplayPosition.Latitude, data.Response.View[0].Result[0].Location.DisplayPosition.Longitude].toString()
 
 			$.ajax({
 				method: 'post',
-				url: baseURL + 'voters',
+				url: baseURL + 'audio-files',
 				data: obj
 			}).done(function (data) {
-				let voter = new Voter(data)
+				let audioFile = new AudioFile(data)
 
-				// data is replaced on the DOM, in the address form, ready for Voter to choose preference
-				loadVoterDataToAddressForm(voter)
+				// data is replaced on the DOM, in the address form, ready for User to edit address if needed
+				loadDataToAddressForm(audioFile)
 
-				new L.marker(voter.geocode.split(',').map(c => parseFloat(c)), {
-					icon: icons[voter.vote_preference]
+				new L.marker(audioFile.geocode.split(',').map(c => parseFloat(c)), {
+					// icon: <set audioFile icon>
 				}).addTo(map)
 				resetAddressForm()
 			})
@@ -124,7 +118,7 @@ function newVoterForm() {
 	})
 }
 
-// voter clicks map, LatLng is converted to street address for validation by user, before voting
+// User clicks map, LatLng is converted to street address for validation by user, before voting
 function mapClickStreetAddress() {
 	let geocode;
 	map.addEventListener('click', function (event) {
@@ -147,7 +141,7 @@ function mapClickStreetAddress() {
 		console.log('the address_string: ', address.Label);
 
 		// let obj = {
-		let voter = {
+		let audioFile = {
 			address_string: address.Label,
 			street_number: address.HouseNumber,
 			street_name: address.Street,
@@ -158,24 +152,25 @@ function mapClickStreetAddress() {
 		}
 
 		// a valid LatLng does NOT mean we have a valid street address ...
-		if (!voter.street_number || !voter.street_name) {
+		if (!audioFile.street_number || !audioFile.street_name) {
 			resetAddressForm()
 
 			$('#geocode').html('<p>Please click again, there is no valid address within 100 meters of where you clicked.</p>').css('background-color', 'pink')
 			return;
 		} else {
 
-			// if we have a valid street address, the data is replaced on the DOM, in the address form, for Voter to vote
-			loadVoterDataToAddressForm(voter)
+			// if we have a valid street address, the data is replaced on the DOM, in the address form, for User to edit/accept.
+			loadDataToAddressForm(audioFile)
+      $('#geocode-label').show()
 			$('#voter-preference-form-div').css("background-color", "rgb(183, 240, 160)");
 			$('#submit-vote-preference-button').css("background-color", "rgb(183, 240, 160)");
-			$('#geocode').html(`<p>geocode: ${voter.geocode}</p>`)
+			$('#geocode').html(`<p>${audioFile.geocode}</p>`)
 		}
 	}
 }
 
 // load address form from map click
-function loadVoterDataToAddressForm(data) {
+function loadDataToAddressForm(data) {
 	$('#street_number').val(data.street_number)
 	$('#street_name').val(data.street_name)
 	$('#city').val(data.city)
@@ -184,7 +179,19 @@ function loadVoterDataToAddressForm(data) {
 	$('#geocode').css('background-color', 'rgb(201, 214, 228)')
 }
 
-class Voter {
+// listen for click of button, pan out to Mattapan, zoom level 15
+function mattapanCenterView() {
+  $('button#load-mattapan-view').on('click', function (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    map.setView([42.26722962533316,-71.09355255306583], 15);
+    resetAddressForm()
+    $('#geocode-label').hide()
+    resetAddressForm()
+  })
+}
+
+class AudioFile {
 	constructor(obj) {
 		this.id = obj.id,
 			this.street_number = obj.street_number,
@@ -193,18 +200,16 @@ class Voter {
 			this.state = obj.state,
 			this.postal_code = obj.postal_code,
 			this.geocode = obj.geocode,
-			this.address_string = obj.address_string,
-			this.vote_preference = obj.vote_preference.toLowerCase()
+			this.address_string = obj.address_string
 	}
 }
 
-Voter.prototype.voterHTML = function () {
+AudioFile.prototype.audioFileHTML = function () {
 	return (`
 		<div>
 			<p>${this.street_number ? this.street_number : ""} ${this.street_name ? this.street_name : ""}</p>
 			<p>${this.city ? this.city : ""}, ${this.state ? this.state : ""}  ${this.postal_code ? this.postal_code : ""}</p>
 			<p>${this.geocode ? this.geocode : ""}</p>
-			<p>${this.vote_preference ? this.vote_preference : ""}</p>
 		</div>
 	`)
 }
