@@ -11,6 +11,7 @@ $(function () {
 });
 
 const baseURL = 'https://voter-api.smithwebtek.com/api/'
+// const baseURL = 'http://127.0.0.1:3000/api/'
 
 // API service www.here.com to geocode street address and vice versa
 let platform = new H.service.Platform({
@@ -50,6 +51,7 @@ function loadAllVoters() {
 		method: 'get',
 		dataType: 'json'
 	}).done(function (response) {
+		console.log('response: ', response);
 		loadMarkers(response)
 	})
 }
